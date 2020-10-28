@@ -1,0 +1,7 @@
+module:
+  group: estore_smartx
+  projects:
+    - esfear-server
+    - esfear-client
+    - esfeosz-server
+    - esfeosz-client
