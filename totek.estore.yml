@@ -1,4 +1,5 @@
 module:
+  name: ESTORE
   group: estore_smartx
   projects:
     - esfear-server

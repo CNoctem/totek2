@@ -6,15 +6,23 @@ import (
 )
 
 type cicdmodule struct {
-	Module   struct {
-		Group      string `yaml:"group"`
+	Module struct {
+		Group    string   `yaml:"group"`
 		Projects []string `yaml:"projects"`
 	} `yaml:"module"`
 }
 
 type CicdModule struct {
-	ConfigProjects []string
-	ScmProjects []string
+	Projects []CicdProject
+}
+
+type CicdProject struct {
+	Name           string
+	ScmUrl         string
+	ConfigUrl      string
+	ConfigCommitId string
+	InfraUrl       string
+	InfraCommitId  string
 }
 
 func GetModule(scmUrl, configUrl, yamlfile string) (*CicdModule, error) {
@@ -24,14 +32,15 @@ func GetModule(scmUrl, configUrl, yamlfile string) (*CicdModule, error) {
 	}
 
 	group := (*module).Module.Group
-	configProjects := make([]string, 0)
-	scmProjects := make([]string, 0)
+	projects := make([]CicdProject, 0)
 	for _, m := range (*module).Module.Projects {
-		scmProjects = append(scmProjects, scmUrl + "/" + group + "/" + m + ".git")
-		configProjects = append(configProjects, configUrl + "/" + group + "/" + m + ".git")
-		configProjects = append(configProjects, configUrl + "/" + group + "/" + m + "-infra.git")
+		pScmUrl := scmUrl + "/" + group + "/" + m + ".git"
+		pConfigfUrl := configUrl + "/" + group + "/" + m + ".git"
+		pInfraUrl := configUrl + "/" + group + "/" + m + "-infra.git"
+		projects = append(projects, CicdProject{Name: m, ScmUrl: pScmUrl, ConfigUrl: pConfigfUrl, InfraUrl: pInfraUrl})
 	}
-	return &CicdModule{ConfigProjects: configProjects, ScmProjects: scmProjects}, nil
+
+	return &CicdModule{Projects: projects}, nil
 }
 
 func readyaml(yamlfile string) (*cicdmodule, error) {
@@ -46,5 +55,3 @@ func readyaml(yamlfile string) (*cicdmodule, error) {
 	}
 	return &config, nil
 }
-
-
