@@ -132,13 +132,32 @@ func DirExists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
-func TExit(code int) {
+func TExit(code int, msg... string) {
+	for _, m := range msg {
+		log.Println(m)
+	}
 	if code < 0 || code > len(msgs) - 1 {
 		code = 0
 	}
 	fmt.Println("\n\n---------------------------------------------------------\n\t", msgs[code])
 	fmt.Println()
 	os.Exit(code)
+}
+
+func TExitOnError(err error, code... int) {
+	if err != nil {
+		c := 4
+		if len(code) > 0 {
+			c = code[0]
+		}
+		log.Println(err)
+		TExit(c)
+	}
+}
+
+func CreateDirOrExit(path string) {
+	err := os.Mkdir(path, 0755)
+	TExitOnError(err)
 }
 
 func getConfigFile() (string, error) {

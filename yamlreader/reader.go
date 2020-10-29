@@ -7,12 +7,14 @@ import (
 
 type cicdmodule struct {
 	Module struct {
+		Name     string   `yaml:"name"`
 		Group    string   `yaml:"group"`
 		Projects []string `yaml:"projects"`
 	} `yaml:"module"`
 }
 
 type CicdModule struct {
+	Name     string
 	Projects []CicdProject
 }
 
@@ -40,7 +42,7 @@ func GetModule(scmUrl, configUrl, yamlfile string) (*CicdModule, error) {
 		projects = append(projects, CicdProject{Name: m, ScmUrl: pScmUrl, ConfigUrl: pConfigfUrl, InfraUrl: pInfraUrl})
 	}
 
-	return &CicdModule{Projects: projects}, nil
+	return &CicdModule{Name: (*module).Module.Name, Projects: projects}, nil
 }
 
 func readyaml(yamlfile string) (*cicdmodule, error) {

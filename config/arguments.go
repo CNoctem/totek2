@@ -30,7 +30,7 @@ func ParseArgs(defined []Option, args []string) (*map[string][]string, error) {
 		for _, e := range defined {
 			if e.Name == a {
 				eArgs := make([]string, e.nArgs)
-				for j := 0; j < e.nArgs; j++ {
+				for j := 0; j < e.nArgs && i < len(args)-1; j++ {
 					i++
 					eArgs[j] = args[i]
 				}
@@ -48,8 +48,5 @@ func GetDescription(options []Option, cmdName string) string {
 			return option.Description
 		}
 	}
-	return "Undefined command or option: "+ cmdName
+	return "Undefined command or option: '" + cmdName + "'"
 }
-
-
-
